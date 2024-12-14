@@ -290,19 +290,19 @@
     state: base_flech
   objectType: Item
 
-# - type: construction
-  # parent: RMC
-  # name: Shell Box (Incendiary)
-  # id: RMCBoxShellsIncendiaryEmpty
-  # graph: RMCBoxMagazine
-  # startNode: start
-  # targetNode: RMCBoxShellsIncendiaryEmpty
-  # category: construction-category-cm-box-magazine
-  # description: A box for holding shells.
-  # icon:
-    # sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
-    # state: base_inc
-  # objectType: Item
+- type: construction
+  parent: RMC
+  name: Shell Box (Incendiary)
+  id: RMCBoxShellsIncendiaryEmpty
+  graph: RMCBoxMagazine
+  startNode: start
+  targetNode: RMCBoxShellsIncendiaryEmpty
+  category: construction-category-cm-box-magazine
+  description: A box for holding shells.
+  icon:
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
+    state: base_inc
+  objectType: Item
 
 # - type: construction
   # parent: RMC
@@ -318,19 +318,19 @@
     # state: base_bean
   # objectType: Item
 
-# - type: construction
-  # parent: RMC
-  # name: Shell Box (Inc Buckshot)
-  # id: RMCBoxShellsIncendiaryBuckshotEmpty
-  # graph: RMCBoxMagazine
-  # startNode: start
-  # targetNode: RMCBoxShellsIncendiaryBuckshotEmpty
-  # category: construction-category-cm-box-magazine
-  # description: A box for holding shells.
-  # icon:
-    # sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
-    # state: base_incbuck
-  # objectType: Item
+- type: construction
+  parent: RMC
+  name: Shell Box (Inc Buckshot)
+  id: RMCBoxShellsIncendiaryBuckshotEmpty
+  graph: RMCBoxMagazine
+  startNode: start
+  targetNode: RMCBoxShellsIncendiaryBuckshotEmpty
+  category: construction-category-cm-box-magazine
+  description: A box for holding shells.
+  icon:
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
+    state: base_incbuck
+  objectType: Item
 
 - type: construction
   parent: RMC
@@ -346,7 +346,65 @@
     state: base_breach
   objectType: Item
 
-  # Construct graphs
+# Misc
+
+- type: construction
+  parent: RMC
+  name: Supply Box (MRE)
+  id: RMCBoxMREEmpty
+  graph: RMCBoxMagazine
+  startNode: start
+  targetNode: RMCBoxMREEmpty
+  category: construction-category-cm-box-magazine
+  description: A box of MREs. Nutritious, but not delicious.
+  icon:
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
+    state: supply_crate
+  objectType: Item
+
+- type: construction
+  parent: RMC
+  name: Supply Box (M94)
+  id: RMCBoxPackFlareEmpty
+  graph: RMCBoxMagazine
+  startNode: start
+  targetNode: RMCBoxPackFlareEmpty
+  category: construction-category-cm-box-magazine
+  description: A box of M94 marking flare packs, to brighten up your day.
+  icon:
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
+    state: supply_crate
+  objectType: Item
+
+- type: construction
+  parent: RMC
+  name: Supply Box (M89-S)
+  id: RMCBoxPackFlareCASEmpty
+  graph: RMCBoxMagazine
+  startNode: start
+  targetNode: RMCBoxPackFlareCASEmpty
+  category: construction-category-cm-box-magazine
+  description: A box of M89 signal flare packs, to mark up the way.
+  icon:
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
+    state: supply_crate
+  objectType: Item
+
+- type: construction
+  parent: RMC
+  name: Supply Box (Flashlights)
+  id: RMCBoxFlashlightsEmpty
+  graph: RMCBoxMagazine
+  startNode: start
+  targetNode: RMCBoxFlashlightsEmpty
+  category: construction-category-cm-box-magazine
+  description: A box of flashlights to brighten your day!
+  icon:
+    sprite: _RMC14/Objects/Weapons/Guns/Ammunition/Boxes/magazine_boxes.rsi
+    state: flashlightbox
+  objectType: Item
+
+# Construct graphs
 - type: constructionGraph
   parent: RMC
   id: RMCBoxMagazine
@@ -484,22 +542,44 @@
       - material: RMCSheetCardboard
         amount: 1
         doAfter: 1
-    # - to: RMCBoxShellsIncendiaryEmpty
-      # steps:
-      # - material: RMCSheetCardboard
-        # amount: 1
-        # doAfter: 1
+    - to: RMCBoxShellsIncendiaryEmpty
+      steps:
+      - material: RMCSheetCardboard
+        amount: 1
+        doAfter: 1
     # - to: RMCBoxShellsBeanbagEmpty
       # steps:
       # - material: RMCSheetCardboard
         # amount: 1
         # doAfter: 1
-    # - to: RMCBoxShellsIncendiaryBuckshotEmpty
-      # steps:
-      # - material: RMCSheetCardboard
-        # amount: 1
-        # doAfter: 1
+    - to: RMCBoxShellsIncendiaryBuckshotEmpty
+      steps:
+      - material: RMCSheetCardboard
+        amount: 1
+        doAfter: 1
     - to: RMCBoxShellsBreachingEmpty
+      steps:
+      - material: RMCSheetCardboard
+        amount: 1
+        doAfter: 1
+
+    # Misc
+    - to: RMCBoxMREEmpty
+      steps:
+      - material: RMCSheetCardboard
+        amount: 1
+        doAfter: 1
+    - to: RMCBoxPackFlareEmpty
+      steps:
+      - material: RMCSheetCardboard
+        amount: 1
+        doAfter: 1
+    - to: RMCBoxPackFlareCASEmpty
+      steps:
+      - material: RMCSheetCardboard
+        amount: 1
+        doAfter: 1
+    - to: RMCBoxFlashlightsEmpty
       steps:
       - material: RMCSheetCardboard
         amount: 1
@@ -570,11 +650,21 @@
     entity: RMCBoxShellsSlugsEmpty
   - node: RMCBoxShellsFlechetteEmpty
     entity: RMCBoxShellsFlechetteEmpty
-  # - node: RMCBoxShellsIncendiaryEmpty
-    # entity: RMCBoxShellsIncendiaryEmpty
+  - node: RMCBoxShellsIncendiaryEmpty
+    entity: RMCBoxShellsIncendiaryEmpty
   # - node: RMCBoxShellsBeanbagEmpty
     # entity: RMCBoxShellsBeanbagEmpty
-  # - node: RMCBoxShellsIncendiaryBuckshotEmpty
-    # entity: RMCBoxShellsIncendiaryBuckshotEmpty
+  - node: RMCBoxShellsIncendiaryBuckshotEmpty
+    entity: RMCBoxShellsIncendiaryBuckshotEmpty
   - node: RMCBoxShellsBreachingEmpty
     entity: RMCBoxShellsBreachingEmpty
+
+  # Misc
+  - node: RMCBoxMREEmpty
+    entity: RMCBoxMREEmpty
+  - node: RMCBoxPackFlareEmpty
+    entity: RMCBoxPackFlareEmpty
+  - node: RMCBoxPackFlareCASEmpty
+    entity: RMCBoxPackFlareCASEmpty
+  - node: RMCBoxFlashlightsEmpty
+    entity: RMCBoxFlashlightsEmpty
