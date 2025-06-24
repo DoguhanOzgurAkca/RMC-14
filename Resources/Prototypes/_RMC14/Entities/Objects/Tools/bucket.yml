@@ -8,7 +8,7 @@
     sprite: _RMC14/Objects/Misc/Janitorial/bucket.rsi
     layers:
     - state: bucket
-    - map: ["enum.SolutionContainerLayers.Fill"]
+    - map: [ "enum.SolutionContainerLayers.Fill" ]
       state: bucket-1
       visible: false
   - type: Item
@@ -79,7 +79,7 @@
     sprite: _RMC14/Objects/Misc/Janitorial/mopbucket.rsi
     layers:
     - state: mopbucket
-    - map: ["enum.SolutionContainerLayers.Fill"]
+    - map: [ "enum.SolutionContainerLayers.Fill" ]
       state: mopbucket-1
       visible: false
   - type: Item
@@ -102,7 +102,7 @@
     sprite: _RMC14/Objects/Misc/Janitorial/janibucket.rsi
     layers:
     - state: janibucket
-    - map: ["enum.SolutionContainerLayers.Fill"]
+    - map: [ "enum.SolutionContainerLayers.Fill" ]
       state: janibucket-1
       visible: false
   - type: Item
@@ -135,3 +135,25 @@
     - 240
     - 300
     - 500
+
+- type: entity
+  parent: RMCBucketJanitorial
+  id: RMCReagentJug
+  name: Reagent Jug
+  description: A large jug made of non-reactive plastic, capable of carrying large amounts of diverse chemicals to wherever they are needed. Holds 500 units.
+  components:
+  - type: Sprite
+    sprite: _RMC14/Objects/Misc/reagentjug.rsi
+    layers:
+    - state: reagentjug
+    - map: [ "enum.SolutionContainerLayers.Fill" ]
+      state: reagentjug-1
+      visible: false
+  - type: Item
+    sprite: _RMC14/Objects/Misc/reagentjug.rsi
+    size: Normal
+  - type: SolutionContainerVisuals
+    maxFillLevels: 5
+    fillBaseName: reagentjug-
+    inHandsMaxFillLevels: 5
+    inHandsFillBaseName: -fill-
