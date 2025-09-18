@@ -1,0 +1,39 @@
+Parasite role in the xenonid faction should have a different way of working.
+
+T2 and T3 type xenonid, such as crusher, preatorian, warrior and so on have limits based on the hive size. I think its like %15-20 for T3 xenonids as an example. They have limited slots based on hive size.
+
+Parasites, at the moment, DON'T, have a size limit like this, but they should. 
+
+## Key Findings: CONTROLLABLE PARASITE LIMITS FOUND
+
+### Playable/Controllable Parasites/Facehuggers
+
+**FINDING**: **Dynamic population-based limit system exists for controllable facehuggers**
+
+**Evidence**:
+
+1. **File**: `/code/modules/mob/living/carbon/xenomorph/hive_status.dm`
+   - `playable_hugger_limit = 0` - Dynamic limit calculated based on hive size
+   - `playable_hugger_max_divisor = 4` - One facehugger per 4 xenos
+   - `playable_hugger_minimum = 2` - Minimum 2 facehuggers allowed
+
+2. **Calculation Formula**:
+
+   ```dm
+   playable_hugger_limit = max(floor(countable_xeno_iterator / playable_hugger_max_divisor), playable_hugger_minimum)
+   ```
+
+   - **Translation**: Maximum controllable facehuggers = max(floor(total_xenos / 4), 2)
+
+3. **Practical Examples**:
+   - **1-7 xenos**: 2 controllable facehuggers maximum
+   - **8-11 xenos**: 2 controllable facehuggers maximum  
+   - **12-15 xenos**: 3 controllable facehuggers maximum
+   - **16-19 xenos**: 4 controllable facehuggers maximum
+   - **20-23 xenos**: 5 controllable facehuggers maximum
+   - **Pattern**: +1 facehugger per 4 additional xenos in hive
+
+
+this expaklains its
+basically, minimum 2, or 1 parasite slot for every 4 xeno. this is the limit 
+we need to implement this. 

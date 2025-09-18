@@ -377,6 +377,64 @@ public abstract class SharedXenoHiveSystem : EntitySystem
 
         return true;
     }
+
+    /// <summary>
+    /// Calculate the maximum number of controllable parasites allowed for a hive based on its size.
+    /// Formula: max(floor(total_xenos / divisor), minimum)
+    /// </summary>
+    public int GetPlayableParasiteLimit(Entity<HiveComponent> hive)
+    {
+        var totalXenos = GetLivingHiveXenos(hive);
+        var calculated = totalXenos / hive.Comp.PlayableParasiteMaxDivisor;
+        return Math.Max(calculated, hive.Comp.PlayableParasiteMinimum);
+    }
+
+    /// <summary>
+    /// Count the number of living xenos in the hive.
+    /// </summary>
+    public int GetLivingHiveXenos(Entity<HiveComponent> hive)
+    {
+        var count = 0;
+        var xenos = EntityQueryEnumerator<XenoComponent, HiveMemberComponent>();
+        while (xenos.MoveNext(out var uid, out _, out var member))
+        {
+            if (member.Hive != hive.Owner)
+                continue;
+
+            if (_mobState.IsDead(uid))
+                continue;
+
+            count++;
+        }
+        return count;
+    }
+
+    /// <summary>
+    /// Check if the hive can have more controllable parasites.
+    /// </summary>
+    public bool CanAddControllableParasite(Entity<HiveComponent> hive)
+    {
+        var limit = GetPlayableParasiteLimit(hive);
+        return hive.Comp.CurrentControllableParasites < limit;
+    }
+
+    /// <summary>
+    /// Increment the count of controllable parasites for the hive.
+    /// </summary>
+    public void AddControllableParasite(Entity<HiveComponent> hive)
+    {
+        hive.Comp.CurrentControllableParasites++;
+        Dirty(hive);
+    }
+
+    /// <summary>
+    /// Decrement the count of controllable parasites for the hive.
+    /// </summary>
+    public void RemoveControllableParasite(Entity<HiveComponent> hive)
+    {
+        hive.Comp.CurrentControllableParasites = Math.Max(0, hive.Comp.CurrentControllableParasites - 1);
+        Dirty(hive);
+    }
 }
 
 /// <summary>

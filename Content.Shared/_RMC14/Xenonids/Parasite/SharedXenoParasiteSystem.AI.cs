@@ -19,6 +19,7 @@ using Content.Shared.Stunnable;
 using Content.Shared.Throwing;
 using Content.Shared.Verbs;
 using Robust.Shared.Containers;
+using Robust.Shared.Network;
 using Robust.Shared.Player;
 
 namespace Content.Shared._RMC14.Xenonids.Parasite;
@@ -105,7 +106,17 @@ public abstract partial class SharedXenoParasiteSystem
     private void OnPlayerRemoved(Entity<XenoParasiteComponent> para, ref PlayerDetachedEvent args)
     {
         if(!TerminatingOrDeleted(para))
+        {
             EnsureComp<ParasiteAIDelayAddComponent>(para);
+            
+            // Decrement the controllable parasite count for the hive when player detaches
+            if (_net.IsServer)
+            {
+                var hive = _hive.GetHive(para.Owner);
+                if (hive != null)
+                    _hive.RemoveControllableParasite(hive.Value);
+            }
+        }
     }
 
     private void OnAIDelayAdded(Entity<ParasiteAIDelayAddComponent> para, ref ComponentStartup args)

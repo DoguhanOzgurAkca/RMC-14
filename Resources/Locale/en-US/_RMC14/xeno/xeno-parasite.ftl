@@ -23,3 +23,5 @@ rmc-xeno-parasite-ghost-carrier-reserved = {THE($xeno)} has reserved the remaini
 rmc-xeno-parasite-ghost-carrier-dead = {THE($xeno)} is dead and all {POSS-ADJ($xeno)} children died with {OBJECT($xeno)}.
 
 rmc-xeno-parasite-carrier-death = The chittering mass of tiny aliens try to escape {THE($xeno)}!
+
+rmc-xeno-parasite-limit-reached = The hive cannot support more controllable parasites! ({$current}/{$limit})

@@ -93,4 +93,23 @@ public sealed partial class HiveComponent : Component
 
     [DataField, AutoNetworkedField]
     public EntProtoId BurrowedLarvaId = "CMXenoLarva";
+
+    /// <summary>
+    /// Minimum number of controllable parasites allowed regardless of hive size
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public int PlayableParasiteMinimum = 2;
+
+    /// <summary>
+    /// Divisor for calculating max controllable parasites based on hive size.
+    /// One controllable parasite per this many xenos.
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public int PlayableParasiteMaxDivisor = 4;
+
+    /// <summary>
+    /// Current count of active controllable parasites (ghosts controlling parasites)
+    /// </summary>
+    [DataField, AutoNetworkedField]
+    public int CurrentControllableParasites;
 }
