@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "license": "CC-BY-SA-3.0",
+  "copyright": "Custom sprite for RMC-14",
+  "size": {
+    "x": 32,
+    "y": 32
+  },
+  "states": [
+    {
+      "name": "unpowered"
+    },
+    {
+      "name": "glowing",
+      "delays": [
+        [
+          2.0,
+          1.8,
+          1.6,
+          1.4,
+          1.2,
+          1.0,
+          0.8,
+          0.4
+        ]
+      ]
+    }
+  ]
+}

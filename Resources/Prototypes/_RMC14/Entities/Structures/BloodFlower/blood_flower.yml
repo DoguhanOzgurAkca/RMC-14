@@ -1,0 +1,33 @@
+- type: entity
+  id: RMCBloodFlower
+  name: blood flower
+  description: A mysterious crimson flower that seems to pulse with an otherworldly energy.
+  components:
+  - type: Sprite
+    sprite: _RMC14/Structures/blood_flower.rsi
+    drawdepth: FloorObjects
+    layers:
+    - state: unpowered
+      map: ["enum.BloodFlowerVisualLayers.Base"]
+  - type: Transform
+    anchored: true
+  - type: Physics
+    bodyType: Static
+  - type: Fixtures
+    fixtures:
+      fix1:
+        shape:
+          !type:PhysShapeAabb
+          bounds: "-0.45,-0.45,0.45,0.45"
+        density: 1000
+        mask:
+        - Impassable
+  - type: BloodFlower
+  - type: PointLight
+    enabled: false
+    radius: 0.0
+    energy: 0.0
+    color: "#FF2222"
+  - type: Clickable
+  - type: InteractionOutline
+  - type: Examinable
