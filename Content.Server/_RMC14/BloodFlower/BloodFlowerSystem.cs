@@ -7,11 +7,6 @@ public sealed class BloodFlowerSystem : SharedBloodFlowerSystem
     public override void Initialize()
     {
         base.Initialize();
-    }
-
-    protected override void OnFlowerAnimate(EntityUid uid, BloodFlowerComponent component)
-    {
-        base.OnFlowerAnimate(uid, component);
-        // Server-side logic can be added here if needed
+        // Server system handles any server-specific logic if needed
     }
 }

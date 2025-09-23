@@ -1,4 +1,5 @@
 using Content.Shared._RMC14.BloodFlower;
+using Content.Shared.GameTicking;
 using Robust.Client.GameObjects;
 using Robust.Shared.Timing;
 
@@ -9,107 +10,60 @@ public sealed class BloodFlowerSystem : SharedBloodFlowerSystem
     [Dependency] private readonly IGameTiming _timing = default!;
     [Dependency] private readonly SpriteSystem _sprite = default!;
     [Dependency] private readonly PointLightSystem _pointLight = default!;
-
-    // Component to track the glow decay
-    private readonly Dictionary<EntityUid, BloodFlowerGlowState> _activeGlows = new();
-
-    private struct BloodFlowerGlowState
-    {
-        public TimeSpan StartTime;
-        public float InitialEnergy;
-        public float InitialRadius;
-        public TimeSpan DecayDuration;
-    }
+    [Dependency] private readonly SharedGameTicker _gameTicker = default!;
 
     public override void Initialize()
     {
         base.Initialize();
-        SubscribeLocalEvent<BloodFlowerComponent, ComponentShutdown>(OnComponentShutdown);
-    }
-
-    private void OnComponentShutdown(EntityUid uid, BloodFlowerComponent component, ComponentShutdown args)
-    {
-        _activeGlows.Remove(uid);
+        // No need for event subscriptions - we handle everything in Update()
     }
 
     public override void Update(float frameTime)
     {
         base.Update(frameTime);
 
-        var currentTime = _timing.CurTime;
-        var toRemove = new List<EntityUid>();
-
-        foreach (var (uid, glowState) in _activeGlows)
+        // Handle all flowers globally based on round time for perfect synchronization
+        var query = EntityQueryEnumerator<BloodFlowerComponent>();
+        while (query.MoveNext(out var uid, out var component))
         {
-            if (!TryComp<PointLightComponent>(uid, out var light))
-            {
-                toRemove.Add(uid);
-                continue;
-            }
+            UpdateFlowerGlow(uid, component);
+        }
+    }
 
-            var elapsed = currentTime - glowState.StartTime;
-            if (elapsed >= glowState.DecayDuration)
-            {
-                // Decay complete - turn off light
-                _pointLight.SetEnabled(uid, false, light);
-                _pointLight.SetEnergy(uid, 0f, light);
-                _pointLight.SetRadius(uid, 0f, light);
-                toRemove.Add(uid);
-                
-                // Return sprite to normal state
-                if (TryComp<SpriteComponent>(uid, out var sprite))
-                {
-                    _sprite.LayerSetRsiState((uid, sprite), BloodFlowerVisualLayers.Base, "base");
-                }
-                continue;
-            }
+    private void UpdateFlowerGlow(EntityUid uid, BloodFlowerComponent component)
+    {
+        if (!TryComp<SpriteComponent>(uid, out var sprite) || !TryComp<PointLightComponent>(uid, out var light))
+            return;
 
-            // Calculate decay progress (0 = start, 1 = complete)
-            var progress = (float)(elapsed.TotalSeconds / glowState.DecayDuration.TotalSeconds);
+        // Calculate global animation timing based on round duration
+        var roundDuration = _gameTicker.RoundDuration();
+        var cycleTime = roundDuration.TotalSeconds % component.AnimationInterval;
+        
+        // Should animate for first 10.2 seconds of each 20-second cycle
+        var shouldAnimate = cycleTime <= 10.2f;
+
+        if (shouldAnimate)
+        {
+            // Calculate decay progress within the 10.2 second animation window
+            var progress = (float)(cycleTime / 10.2f);
             
             // Smooth exponential decay for more natural fading
             var decayFactor = 1f - MathF.Pow(progress, 2f);
             
-            // Apply the decay
-            _pointLight.SetEnergy(uid, glowState.InitialEnergy * decayFactor, light);
-            _pointLight.SetRadius(uid, glowState.InitialRadius * decayFactor, light);
+            // Set sprite to glowing state and apply light
+            _sprite.LayerSetRsiState((uid, sprite), BloodFlowerVisualLayers.Base, "glowing");
+            _pointLight.SetEnabled(uid, true, light);
+            _pointLight.SetEnergy(uid, 4.0f * decayFactor, light);
+            _pointLight.SetRadius(uid, 7.5f * decayFactor, light);
         }
-
-        foreach (var uid in toRemove)
+        else
         {
-            _activeGlows.Remove(uid);
+            // Not animating - ensure light is off and sprite is unpowered
+            _sprite.LayerSetRsiState((uid, sprite), BloodFlowerVisualLayers.Base, "unpowered");
+            _pointLight.SetEnabled(uid, false, light);
+            _pointLight.SetEnergy(uid, 0f, light);
+            _pointLight.SetRadius(uid, 0f, light);
         }
-    }
-
-    protected override void OnFlowerAnimate(EntityUid uid, BloodFlowerComponent component)
-    {
-        base.OnFlowerAnimate(uid, component);
-
-        if (!TryComp<SpriteComponent>(uid, out var sprite) || !TryComp<PointLightComponent>(uid, out var light))
-            return;
-
-        // Don't restart if already glowing
-        if (_activeGlows.ContainsKey(uid))
-            return;
-
-        // Set sprite to glowing state
-        _sprite.LayerSetRsiState((uid, sprite), BloodFlowerVisualLayers.Base, "glowing");
-
-        // Start the glow decay
-        var glowState = new BloodFlowerGlowState
-        {
-            StartTime = _timing.CurTime,
-            InitialEnergy = 4.0f,      // Bright red glow
-            InitialRadius = 7.5f,      // Large radius (2.5x base size)
-            DecayDuration = TimeSpan.FromSeconds(10.2f) // Smooth decay over ~10 seconds
-        };
-
-        // Enable light and set initial values
-        _pointLight.SetEnabled(uid, true, light);
-        _pointLight.SetEnergy(uid, glowState.InitialEnergy, light);
-        _pointLight.SetRadius(uid, glowState.InitialRadius, light);
-
-        _activeGlows[uid] = glowState;
     }
 }
 
